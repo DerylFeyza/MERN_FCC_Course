@@ -1,7 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Nav } from "react-bootstrap"; // Make sure to install 'react-bootstrap'
-
+import { Routes, Route, Link } from "react-router-dom";
 import AddReview from "./components/add-review";
 import Restaurant from "./components/restaurants";
 import RestaurantsList from "./components/restaurants-list";
@@ -19,48 +17,54 @@ function App() {
 	}
 
 	return (
-		<Router>
-			<div>
-				<nav className="navbar navbar-expand navbar-dark bg-dark">
-					<a href="/restaurants" className="navbar-brand">
-						Restaurant Reviews
-					</a>
-					<div className="navbar-nav mr-auto">
-						<Nav.Item>
-							<Link to={"/restaurants"} className="nav-link">
-								Restaurants
+		<div>
+			<nav className="navbar navbar-expand navbar-dark bg-dark">
+				<a href="/restaurants" className="navbar-brand">
+					Restaurant Reviews
+				</a>
+				<div className="navbar-nav mr-auto">
+					<li className="nav-item">
+						<Link to={"/restaurants"} className="nav-link">
+							Restaurants
+						</Link>
+					</li>
+					<li className="nav-item">
+						{user ? (
+							<a
+								onClick={logout}
+								className="nav-link"
+								style={{ cursor: "pointer" }}
+							>
+								Logout {user.name}
+							</a>
+						) : (
+							<Link to={"/login"} className="nav-link">
+								Login
 							</Link>
-						</Nav.Item>
-						<Nav.Item>
-							{user ? (
-								<Link to={"/login"} className="nav-link" onClick={logout}>
-									Logout {user.name}
-								</Link>
-							) : (
-								<Link to={"/login"} className="nav-link">
-									Login
-								</Link>
-							)}
-						</Nav.Item>
-					</div>
-				</nav>
-
-				<div className="container mt-3">
-					<Routes>
-						<Route exact path="/" element={<RestaurantsList />} />
-						<Route
-							path="/restaurants/:id/review"
-							element={<AddReview user={user} />}
-						/>
-						<Route
-							path="/restaurants/:id"
-							element={<Restaurant user={user} />}
-						/>
-						<Route path="/login" element={<Login login={login} />} />
-					</Routes>
+						)}
+					</li>
 				</div>
+			</nav>
+
+			<div className="container mt-3">
+				<Routes>
+					<Route exact path="/" element={<RestaurantsList />} />
+					<Route path="/restaurants" element={<RestaurantsList />} />
+					<Route
+						path="/restaurants/:id/review"
+						element={<AddReview user={user} />} // Pass the user prop here
+					/>
+					<Route
+						path="/restaurants/:id"
+						element={<Restaurant user={user} />} // Pass the user prop here
+					/>
+					<Route
+						path="/login"
+						element={<Login login={login} />} // Pass the login prop here if needed
+					/>
+				</Routes>
 			</div>
-		</Router>
+		</div>
 	);
 }
 
