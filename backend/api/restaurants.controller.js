@@ -54,6 +54,7 @@ export default class RestaurantsController {
 			res.json(cuisines);
 		} catch (e) {
 			console.log(`api ${e}`);
+			console.log(`negawatt`);
 			res.status(500).json({ error: e });
 		}
 	}

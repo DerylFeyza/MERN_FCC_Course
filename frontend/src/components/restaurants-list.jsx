@@ -41,7 +41,7 @@ const RestaurantsList = (props) => {
 	};
 
 	const retrieveCuisines = () => {
-		RestaurantDataService.getCuisine()
+		RestaurantDataService.getCuisines()
 			.then((response) => {
 				console.log(response.data);
 				setCuisines(["All Cuisines"].concat(response.data));
@@ -77,64 +77,75 @@ const RestaurantsList = (props) => {
 	const findByCuisine = () => {
 		if (searchCuisine == "All Cuisines") {
 			refreshList();
-		} else find(searchCuisine, "cuisine");
+		} else {
+			find(searchCuisine, "cuisine");
+		}
 	};
 
 	return (
 		<div>
-			<div className="row pb-1">
-				<div className="input-group col-lg-4">
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Search by name"
-						value={searchName}
-						onChange={onChangeSearchName}
-					/>
-					<div className="input-group-append">
-						<button
-							className="btn btn-outline-secondary"
-							type="button"
-							onClick={findByName}
-						>
-							Search
-						</button>
+			<div className="row pb-1" display="flex">
+				<div className="col-md-4">
+					<div className="input-group">
+						<input
+							type="text"
+							className="form-control"
+							placeholder="Search by name"
+							value={searchName}
+							onChange={onChangeSearchName}
+						/>
+						<div className="input-group-append">
+							<button
+								className="btn btn-outline-secondary"
+								type="button"
+								onClick={findByName}
+							>
+								Search
+							</button>
+						</div>
 					</div>
 				</div>
-				<div className="input-group col-lg-4">
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Search by zip"
-						value={searchZip}
-						onChange={onChangeSearchZip}
-					/>
-					<div className="input-group-append">
-						<button
-							className="btn btn-outline-secondary"
-							type="button"
-							onClick={findByZip}
-						>
-							Search
-						</button>
+				<div className="col-md-4">
+					<div className="input-group">
+						<input
+							type="text"
+							className="form-control"
+							placeholder="Search by zip"
+							value={searchZip}
+							onChange={onChangeSearchZip}
+						/>
+						<div className="input-group-append">
+							<button
+								className="btn btn-outline-secondary"
+								type="button"
+								onClick={findByZip}
+							>
+								Search
+							</button>
+						</div>
 					</div>
 				</div>
-				<div className="input-group col-lg-4">
-					<select onChange={onChangeSearchCuisine}>
-						{cuisines.map((cuisine) => (
-							<option key={cuisine} value={cuisine}>
-								{cuisine.substr(0, 20)}
-							</option>
-						))}
-					</select>
-					<div className="input-group-append">
-						<button
-							className="btn btn-outline-secondary"
-							type="button"
-							onClick={findByCuisine}
-						>
-							Search
-						</button>
+				<div className="col-md-4">
+					<div className="input-group">
+						<select onChange={onChangeSearchCuisine}>
+							{cuisines.map((cuisine) => {
+								return (
+									<option key={cuisine} value={cuisine}>
+										{" "}
+										{cuisine.substr(0, 20)}{" "}
+									</option>
+								);
+							})}
+						</select>
+						<div className="input-group-append">
+							<button
+								className="btn btn-outline-secondary"
+								type="button"
+								onClick={findByCuisine}
+							>
+								Search
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -143,6 +154,7 @@ const RestaurantsList = (props) => {
 					const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
 					return (
 						<div key={restaurant._id} className="col-lg-4 pb-1">
+							{console.log(restaurant._id)}
 							<div className="card">
 								<div className="card-body">
 									<h5 className="card-title">{restaurant.name}</h5>
@@ -161,6 +173,8 @@ const RestaurantsList = (props) => {
 											View Reviews
 										</Link>
 										<a
+											target="_blank"
+											rel="noreferrer"
 											href={"https://www.google.com/maps/place/" + address}
 											className="btn btn-primary col-lg-5 mx-1 mb-1"
 										>
