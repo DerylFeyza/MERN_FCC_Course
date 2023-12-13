@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import AddReview from "./components/add-review";
 import Restaurant from "./components/restaurants";
-import RestaurantsList from "./components/restaurants-list";
+import RestaurantsList from "../pages/restaurant-list/restaurant-list";
 import Login from "./components/login";
 
 function App() {
