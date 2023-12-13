@@ -8,11 +8,14 @@ const RestaurantsList = (props) => {
 	const [searchZip, setSearchZip] = useState("");
 	const [searchCuisine, setSearchCuisine] = useState("");
 	const [cuisines, setCuisines] = useState(["All Cuisines"]);
+	const [currentPage, setCurrentPage] = useState(0);
+	const [maxPage, setMaxPage] = useState(null);
+	const minPage = 0;
 
 	useEffect(() => {
-		retrieveRestaurants();
+		retrieveRestaurants(currentPage);
 		retrieveCuisines();
-	}, []);
+	}, [currentPage]);
 
 	const onChangeSearchName = (e) => {
 		const searchName = e.target.value;
@@ -29,10 +32,12 @@ const RestaurantsList = (props) => {
 		setSearchCuisine(searchCuisine);
 	};
 
-	const retrieveRestaurants = () => {
-		RestaurantDataService.getAll()
+	const retrieveRestaurants = (page) => {
+		RestaurantDataService.getAll(page)
 			.then((response) => {
 				console.log(response.data);
+				console.log(response.data.total_results);
+
 				setRestaurants(response.data.restaurants);
 			})
 			.catch((e) => {
@@ -40,10 +45,24 @@ const RestaurantsList = (props) => {
 			});
 	};
 
+	const nextPage = () => {
+		if (maxPage === null) {
+			setCurrentPage(currentPage + 1);
+		} else if (currentPage <= maxPage - 2 && maxPage !== null) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+
+	const previousPage = () => {
+		if (currentPage > minPage) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
+
 	const retrieveCuisines = () => {
 		RestaurantDataService.getCuisines()
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				setCuisines(["All Cuisines"].concat(response.data));
 			})
 			.catch((e) => {
@@ -55,11 +74,12 @@ const RestaurantsList = (props) => {
 		retrieveRestaurants();
 	};
 
-	const find = (query, by) => {
-		RestaurantDataService.find(query, by)
+	const find = (query, by, page) => {
+		RestaurantDataService.find(query, by, page)
 			.then((response) => {
 				console.log(response.data);
 				setRestaurants(response.data.restaurants);
+				setMaxPage(Math.ceil(response.data.total_results / 20));
 			})
 			.catch((e) => {
 				console.log(e);
@@ -81,7 +101,6 @@ const RestaurantsList = (props) => {
 			find(searchCuisine, "cuisine");
 		}
 	};
-
 	return (
 		<div>
 			<div className="row pb-1" display="flex">
@@ -154,7 +173,6 @@ const RestaurantsList = (props) => {
 					const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
 					return (
 						<div key={restaurant._id} className="col-lg-4 pb-1">
-							{console.log(restaurant._id)}
 							<div className="card">
 								<div className="card-body">
 									<h5 className="card-title">{restaurant.name}</h5>
@@ -187,6 +205,23 @@ const RestaurantsList = (props) => {
 					);
 				})}
 			</div>
+			<nav aria-label="Page navigation example">
+				<ul className="pagination">
+					<li className="page-item">
+						<a className="page-link" onClick={previousPage}>
+							Previous
+						</a>
+					</li>
+					<li className="page-item">
+						<a className="page-link">{currentPage}</a>
+					</li>
+					<li className="page-item">
+						<a className="page-link" onClick={nextPage}>
+							Next
+						</a>
+					</li>
+				</ul>
+			</nav>
 		</div>
 	);
 };
