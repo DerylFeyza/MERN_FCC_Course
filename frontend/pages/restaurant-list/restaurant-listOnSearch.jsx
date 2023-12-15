@@ -2,33 +2,32 @@
 import React, { useState, useEffect } from "react";
 import RestaurantsListDisplay from "./fragments/RestaurantListDisplay";
 import * as RestaurantsListFunctions from "./fragments/RestaurantListFunction";
-import { useParams, useSearchParams } from "react-router-dom";
 
 const RestaurantsList = (props) => {
-	const { page } = useParams();
 	const [restaurants, setRestaurants] = useState([]);
 	const [searchName, setSearchName] = useState("");
 	const [searchZip, setSearchZip] = useState("");
 	const [searchCuisine, setSearchCuisine] = useState("");
+	const [searched, setSearched] = useState("");
 	const [cuisines, setCuisines] = useState(["All Cuisines"]);
 	const [currentPage, setCurrentPage] = useState(0);
 	const [maxPage, setMaxPage] = useState(null);
-	const pageParam = searchParams.get(page);
-	const searchParams = useSearchParams();
 	const minPage = 0;
-	console.log(page);
+
 	useEffect(() => {
 		RestaurantsListFunctions.retrieveRestaurants(
-			page,
+			currentPage,
 			setRestaurants,
 			setMaxPage
 		);
 		RestaurantsListFunctions.retrieveCuisines(setCuisines);
-	}, [page]);
+	}, [currentPage]);
 
 	const findByName = () => {
 		RestaurantsListFunctions.findByName(
+			setSearched,
 			searchName,
+			RestaurantsListFunctions.find,
 			currentPage,
 			setRestaurants,
 			setMaxPage
@@ -37,7 +36,9 @@ const RestaurantsList = (props) => {
 
 	const findByZip = () => {
 		RestaurantsListFunctions.findByZip(
+			setSearched,
 			searchZip,
+			RestaurantsListFunctions.find,
 			currentPage,
 			setRestaurants,
 			setMaxPage
@@ -46,7 +47,10 @@ const RestaurantsList = (props) => {
 
 	const findByCuisine = () => {
 		RestaurantsListFunctions.findByCuisine(
+			setSearched,
 			searchCuisine,
+			RestaurantsListFunctions.refreshList,
+			RestaurantsListFunctions.find,
 			currentPage,
 			setRestaurants,
 			setMaxPage
@@ -54,16 +58,27 @@ const RestaurantsList = (props) => {
 	};
 
 	const nextPage = () => {
-		RestaurantsListFunctions.nextPage(currentPage, maxPage, setCurrentPage);
+		RestaurantsListFunctions.nextPageOnSearch(
+			searched,
+			currentPage,
+			maxPage,
+			setCurrentPage,
+			RestaurantsListFunctions.find
+		);
 	};
 
 	const previousPage = () => {
-		RestaurantsListFunctions.previousPage(currentPage, minPage, setCurrentPage);
+		RestaurantsListFunctions.previousPageOnSearch(
+			searched,
+			currentPage,
+			minPage,
+			setCurrentPage,
+			RestaurantsListFunctions.find
+		);
 	};
 
 	return (
 		<RestaurantsListDisplay
-			setSearchParams={setSearchParams}
 			restaurants={restaurants}
 			currentPage={currentPage}
 			previousPage={previousPage}

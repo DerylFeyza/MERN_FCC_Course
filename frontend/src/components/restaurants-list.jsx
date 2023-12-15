@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import RestaurantDataService from "../services/restaurant";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const RestaurantsList = (props) => {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [restaurants, setRestaurants] = useState([]);
 	const [searchName, setSearchName] = useState("");
 	const [searchZip, setSearchZip] = useState("");
@@ -16,21 +17,6 @@ const RestaurantsList = (props) => {
 		retrieveRestaurants(currentPage);
 		retrieveCuisines();
 	}, [currentPage]);
-
-	const onChangeSearchName = (e) => {
-		const searchName = e.target.value;
-		setSearchName(searchName);
-	};
-
-	const onChangeSearchZip = (e) => {
-		const searchZip = e.target.value;
-		setSearchZip(searchZip);
-	};
-
-	const onChangeSearchCuisine = (e) => {
-		const searchCuisine = e.target.value;
-		setSearchCuisine(searchCuisine);
-	};
 
 	const retrieveRestaurants = (page) => {
 		RestaurantDataService.getAll(page)
@@ -72,6 +58,7 @@ const RestaurantsList = (props) => {
 
 	const refreshList = () => {
 		retrieveRestaurants();
+		setSearchCuisine({ query: "", by: "", page: 0 });
 	};
 
 	const find = (query, by, page) => {
@@ -86,21 +73,57 @@ const RestaurantsList = (props) => {
 			});
 	};
 
+	const findAndUpdateSearchParams = (
+		searchValue,
+		byValue,
+		pageValue,
+		setParamsFunction
+	) => {
+		setParamsFunction({ query: searchValue, by: byValue, page: pageValue });
+		const updatedSearchParams = new URLSearchParams({
+			query: searchValue,
+			by: byValue,
+			page: pageValue,
+		});
+
+		const query = updatedSearchParams.get("query") || "";
+		const by = updatedSearchParams.get("by") || "name";
+		const page = updatedSearchParams.get("page") || 0;
+
+		find(query, by, page);
+	};
+
 	const findByName = () => {
-		find(searchName, "name");
+		findAndUpdateSearchParams(searchName, "name", 0, setSearchParams);
 	};
 
 	const findByZip = () => {
-		find(searchZip, "zipcode");
+		findAndUpdateSearchParams(searchZip, "zipcode", 0, setSearchParams);
 	};
 
 	const findByCuisine = () => {
-		if (searchCuisine == "All Cuisines") {
+		if (searchCuisine === "All Cuisines") {
 			refreshList();
 		} else {
-			find(searchCuisine, "cuisine");
+			findAndUpdateSearchParams(searchCuisine, "cuisine", 0, setSearchParams);
 		}
 	};
+
+	const onChangeSearchName = (e) => {
+		const searchName = e.target.value;
+		setSearchName(searchName);
+	};
+
+	const onChangeSearchZip = (e) => {
+		const searchZip = e.target.value;
+		setSearchZip(searchZip);
+	};
+
+	const onChangeSearchCuisine = (e) => {
+		const searchCuisine = e.target.value;
+		setSearchCuisine(searchCuisine);
+	};
+
 	return (
 		<div>
 			<div className="row pb-1" display="flex">

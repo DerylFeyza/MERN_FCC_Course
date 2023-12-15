@@ -1,8 +1,10 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import AddReview from "./components/add-review";
+import Users from "./components/searchparamstest";
 import Restaurant from "./components/restaurants";
-import RestaurantsList from "../pages/restaurant-list/restaurant-list";
+import RestaurantsList from "./components/restaurants-list";
+import RestaurantsListOnSearch from "../pages/restaurant-list/restaurant-listOnSearch";
 import Login from "./components/login";
 
 function App() {
@@ -48,8 +50,13 @@ function App() {
 
 			<div className="container mt-3">
 				<Routes>
-					<Route exact path="/" element={<RestaurantsList />} />
-					<Route path="/restaurants" element={<RestaurantsList />} />
+					<Route exact path="/restaurants" element={<RestaurantsList />} />
+					<Route path="/restaurants/:page" element={<RestaurantsList />} />
+					<Route
+						path="/restaurants/search"
+						element={<RestaurantsListOnSearch />}
+					/>
+
 					<Route
 						path="/restaurants/:id/review"
 						element={<AddReview user={user} />} // Pass the user prop here

@@ -1,8 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-
+import { useNavigate } from "react-router-dom";
+const SearchButton = () => {
+	const navigate = useNavigate();
+	navigate("/restaurant/search");
+};
 const RestaurantsListDisplay = ({
+	setSearchParams,
 	restaurants,
 	currentPage,
 	previousPage,
@@ -31,13 +36,13 @@ const RestaurantsListDisplay = ({
 							onChange={onChangeSearchName}
 						/>
 						<div className="input-group-append">
-							<button
+							<a
 								className="btn btn-outline-secondary"
 								type="button"
-								onClick={findByName}
+								onClick={() => setSearchParams({ name: searchName })}
 							>
 								Search
-							</button>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -51,13 +56,13 @@ const RestaurantsListDisplay = ({
 							onChange={onChangeSearchZip}
 						/>
 						<div className="input-group-append">
-							<button
+							<a
 								className="btn btn-outline-secondary"
 								type="button"
 								onClick={findByZip}
 							>
 								Search
-							</button>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -145,6 +150,7 @@ const RestaurantsListDisplay = ({
 
 // Define PropTypes outside the component body
 RestaurantsListDisplay.propTypes = {
+	setSearchParams: PropTypes.string.isRequired,
 	restaurants: PropTypes.array.isRequired,
 	currentPage: PropTypes.number.isRequired,
 	previousPage: PropTypes.func.isRequired,
