@@ -64,7 +64,7 @@ const RestaurantsList = (props) => {
 			.then((response) => {
 				console.log(response.data);
 				setRestaurants(response.data.restaurants);
-				setMaxPage(Math.ceil(response.data.total_results / 20));
+				setMaxPage(Math.ceil(response.data.total_results / 21));
 			})
 			.catch((e) => {
 				console.log(e);
