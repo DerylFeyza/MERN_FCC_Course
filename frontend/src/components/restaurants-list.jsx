@@ -9,14 +9,26 @@ const RestaurantsList = (props) => {
 	const [searchZip, setSearchZip] = useState("");
 	const [searchCuisine, setSearchCuisine] = useState("");
 	const [cuisines, setCuisines] = useState(["All Cuisines"]);
-	const [currentPage, setCurrentPage] = useState(0);
 	const [maxPage, setMaxPage] = useState(null);
-	const minPage = 0;
 
 	useEffect(() => {
-		retrieveRestaurants(currentPage);
+		const query = searchParams.get("query") || "";
+		const by = searchParams.get("by") || "name";
+		const page = searchParams.get("page") || 0;
+
+		// Update the state based on URL parameters
+		if (by === "name") {
+			setSearchName(query);
+		}
+		if (by === "zipcode") {
+			setSearchZip(query);
+		}
+		if (by === "cuisine") {
+			setSearchCuisine(query);
+		}
+		find(query, by, page);
 		retrieveCuisines();
-	}, [currentPage]);
+	}, [searchParams]);
 
 	const retrieveRestaurants = (page) => {
 		RestaurantDataService.getAll(page)
@@ -29,20 +41,6 @@ const RestaurantsList = (props) => {
 			.catch((e) => {
 				console.log(e);
 			});
-	};
-
-	const nextPage = () => {
-		if (maxPage === null) {
-			setCurrentPage(currentPage + 1);
-		} else if (currentPage <= maxPage - 2 && maxPage !== null) {
-			setCurrentPage(currentPage + 1);
-		}
-	};
-
-	const previousPage = () => {
-		if (currentPage > minPage) {
-			setCurrentPage(currentPage - 1);
-		}
 	};
 
 	const retrieveCuisines = () => {
@@ -58,7 +56,7 @@ const RestaurantsList = (props) => {
 
 	const refreshList = () => {
 		retrieveRestaurants();
-		setSearchCuisine({ query: "", by: "", page: 0 });
+		setSearchParams({});
 	};
 
 	const find = (query, by, page) => {
@@ -80,17 +78,17 @@ const RestaurantsList = (props) => {
 		setParamsFunction
 	) => {
 		setParamsFunction({ query: searchValue, by: byValue, page: pageValue });
-		const updatedSearchParams = new URLSearchParams({
-			query: searchValue,
-			by: byValue,
-			page: pageValue,
-		});
+		// const updatedSearchParams = new URLSearchParams({
+		// 	query: searchValue,
+		// 	by: byValue,
+		// 	page: pageValue,
+		// });
 
-		const query = updatedSearchParams.get("query") || "";
-		const by = updatedSearchParams.get("by") || "name";
-		const page = updatedSearchParams.get("page") || 0;
+		// const query = updatedSearchParams.get("query") || "";
+		// const by = updatedSearchParams.get("by") || "name";
+		// const page = updatedSearchParams.get("page") || 0;
 
-		find(query, by, page);
+		// find(query, by, page);
 	};
 
 	const findByName = () => {
@@ -109,6 +107,29 @@ const RestaurantsList = (props) => {
 		}
 	};
 
+	const nextPage = () => {
+		const query = searchParams.get("query") || "";
+		const by = searchParams.get("by") || "name";
+		let page = parseInt(searchParams.get("page")) || 0;
+
+		if (maxPage === null || (page <= maxPage - 2 && maxPage !== null)) {
+			page = page + 1;
+			console.log("page" + page);
+		}
+
+		findAndUpdateSearchParams(query, by, page, setSearchParams);
+	};
+
+	const previousPage = () => {
+		const query = searchParams.get("query") || "";
+		const by = searchParams.get("by") || "name";
+		let page = parseInt(searchParams.get("page")) || 0;
+		if (page > 0) {
+			page = page - 1;
+			console.log("page" + page);
+		}
+		findAndUpdateSearchParams(query, by, page, setSearchParams);
+	};
 	const onChangeSearchName = (e) => {
 		const searchName = e.target.value;
 		setSearchName(searchName);
@@ -236,7 +257,7 @@ const RestaurantsList = (props) => {
 						</a>
 					</li>
 					<li className="page-item">
-						<a className="page-link">{currentPage}</a>
+						<a className="page-link">{searchParams.get("page") || 0}</a>
 					</li>
 					<li className="page-item">
 						<a className="page-link" onClick={nextPage}>
