@@ -20,6 +20,7 @@ function App() {
 
 	return (
 		<div>
+			{console.log(user)}
 			<nav className="navbar navbar-expand navbar-dark bg-dark">
 				<a href="/restaurants" className="navbar-brand">
 					Restaurant Reviews
@@ -50,12 +51,20 @@ function App() {
 
 			<div className="container mt-3">
 				<Routes>
-					<Route exact path="/restaurants" element={<RestaurantsList />} />
+					<Route exact path="/" element={<RestaurantsList user={user} />} />
+					<Route
+						exact
+						path="/restaurants"
+						element={<RestaurantsList user={user} />}
+					/>
 					<Route
 						path="/restaurants/:id/review"
 						element={<AddReview user={user} />} // Pass the user prop here
 					/>
-					<Route path="/restaurants/:id" element={<RestaurantReviews />} />
+					<Route
+						path="/restaurants/:id"
+						element={<RestaurantReviews user={user} />}
+					/>
 					<Route
 						path="/login"
 						element={<Login login={login} />} // Pass the login prop here if needed
