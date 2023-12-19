@@ -9,7 +9,6 @@ import Login from "./components/login";
 
 function App() {
 	const [user, setUser] = React.useState(null);
-
 	async function login(user = null) {
 		setUser(user);
 	}
@@ -22,9 +21,9 @@ function App() {
 		<div>
 			{console.log(user)}
 			<nav className="navbar navbar-expand navbar-dark bg-dark">
-				<a href="/restaurants" className="navbar-brand">
-					Restaurant Reviews
-				</a>
+				<Link to={"/restaurants"} className="nav-brand">
+					Restaurants Review
+				</Link>
 				<div className="navbar-nav mr-auto">
 					<li className="nav-item">
 						<Link to={"/restaurants"} className="nav-link">
@@ -59,7 +58,7 @@ function App() {
 					/>
 					<Route
 						path="/restaurants/:id/review"
-						element={<AddReview user={user} />} // Pass the user prop here
+						element={<AddReview user={user} state={"aaa"} />} // Pass the user prop here
 					/>
 					<Route
 						path="/restaurants/:id"

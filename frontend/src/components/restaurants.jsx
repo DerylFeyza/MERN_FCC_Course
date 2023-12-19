@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import RestaurantDataService from "../services/restaurant";
 
 const RestaurantReviews = (props) => {
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const initialRestaurantState = {
 		id: null,
@@ -41,6 +42,10 @@ const RestaurantReviews = (props) => {
 			.catch((e) => {
 				console.log(e);
 			});
+	};
+
+	const handleEditReview = (review) => {
+		navigate(`/restaurants/${id}/review`, { state: { currentReview: review } });
 	};
 
 	return (
@@ -83,17 +88,22 @@ const RestaurantReviews = (props) => {
 												>
 													Delete
 												</a>
-												<Link
+												{/* <Link
 													to={{
 														pathname: "/restaurants/" + id + "/review",
 														state: {
 															currentReview: review,
 														},
 													}}
+												>
+													Edit
+												</Link> */}
+												<a
+													onClick={() => handleEditReview(review)}
 													className="btn btn-primary col-lg-5 mx-1 mb-1"
 												>
 													Edit
-												</Link>
+												</a>
 											</div>
 										)}
 									</div>
