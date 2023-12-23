@@ -11,7 +11,9 @@ export default class ReviewsDAO {
 		try {
 			reviews = await conn.db(process.env.RESTREVIEWS_NS).collection("reviews");
 		} catch (e) {
-			console.error(`Unable to establish a collection handle in userDAO: ${e}`);
+			console.error(
+				`Unable to establish a collection handle in reviewsDAO: ${e}`
+			);
 		}
 	}
 
