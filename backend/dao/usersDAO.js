@@ -1,43 +1,30 @@
 import mongodb from "mongodb";
 const ObjectId = mongodb.ObjectId;
-const jsonwebtoken = require("jsonwebtoken");
-const SECRET_KEY = "secretcode";
 
-let users;
+let accounts;
 
 export default class UsersDAO {
 	static async injectDB(conn) {
-		if (users) {
+		if (accounts) {
+			console.log("woo");
 			return;
 		}
 		try {
-			users = await conn.db(process.env.RESTREVIEWS_NS).collection("users");
+			accounts = await conn.db(process.env.RESTREVIEWS_NS).collection("users");
 		} catch (e) {
-			console.error(`Unable to establish a collection handle in userDAO: ${e}`);
+			`error ${e}`;
 		}
 	}
 
-	static async addUser(name, password) {
+	static async addUser(user, password) {
 		try {
 			const userData = {
-				name: name,
+				user: user,
 				password: password,
 			};
-			return await users.insertOne(userData);
+			return await accounts.insertOne(userData);
 		} catch (e) {
-			console.error(`unable to post user ${e}`);
-			return { error: e };
-		}
-	}
-
-	static async deleteUser(userId) {
-		try {
-			const deleteOneUser = await users.deleteOne({
-				_id: new ObjectId(userId),
-			});
-			return deleteOneUser;
-		} catch (e) {
-			console.error(`unable to delete user ${e}`);
+			console.error(`unable to post user${e}`);
 			return { error: e };
 		}
 	}
