@@ -13,6 +13,7 @@ router
 	.put(ReviewsCtrl.apiUpdateReview)
 	.delete(ReviewsCtrl.apiDeleteReview);
 
-router.route("/user").post(UserCtrl.addUser).delete(UserCtrl.deleteUser);
+router.route("/user").post(UserCtrl.addUser);
+router.route("/user/:id").delete(UserCtrl.deleteUser);
 
 export default router;

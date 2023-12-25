@@ -14,7 +14,7 @@ export default class UserController {
 
 	static async deleteUser(req, res, next) {
 		try {
-			const userId = req.query.userId;
+			const userId = req.params.id;
 			const deleteUserResponse = await UsersDAO.deleteUser(userId);
 			res.json({ status: "user has been deleted" });
 		} catch (e) {

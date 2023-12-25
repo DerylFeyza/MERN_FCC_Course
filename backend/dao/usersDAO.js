@@ -28,4 +28,17 @@ export default class UsersDAO {
 			return { error: e };
 		}
 	}
+
+	static async deleteUser(userId) {
+		try {
+			console.log(userId);
+			const deleteOneUser = await accounts.deleteOne({
+				_id: new ObjectId(userId),
+			});
+			return deleteOneUser;
+		} catch (e) {
+			console.error(`unable to delete user ${e}`);
+			return { error: e };
+		}
+	}
 }
