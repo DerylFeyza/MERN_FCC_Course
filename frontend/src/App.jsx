@@ -1,10 +1,8 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import AddReview from "./components/add-review";
-import Users from "./components/searchparamstest";
 import RestaurantReviews from "./components/restaurants";
 import RestaurantsList from "./components/restaurants-list";
-import RestaurantsListOnSearch from "../pages/restaurant-list/restaurant-listOnSearch";
 import Login from "./components/login";
 
 function App() {
