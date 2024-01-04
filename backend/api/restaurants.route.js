@@ -14,6 +14,7 @@ router
 	.delete(ReviewsCtrl.apiDeleteReview);
 
 router.route("/user").post(UserCtrl.addUser);
+router.route("/user/login").post(UserCtrl.login);
 router.route("/user/:id").delete(UserCtrl.deleteUser);
 
 export default router;
